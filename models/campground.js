@@ -1,11 +1,12 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema // check if this line is correct or not
+const Schema = mongoose.Schema
 
 const CampgroundSchema = new Schema({
     title: String,
-    price: String,
+    price: Number,
     location: String,
     description: String,
+    image: String
 })
 
 module.exports = mongoose.model('Campground' , CampgroundSchema)
