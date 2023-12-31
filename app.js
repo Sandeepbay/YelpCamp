@@ -60,11 +60,7 @@ app.get("/campgrounds/new", (req, res) => {
   res.render("campground/new");
 });
 
-app.post("/campgrounds", validateCampground , catchAsync(async (req, res , next) => {
-  // if(!req.body.campground) {
-  //   next(new expressError("Invalid Data provided" , 400))
-  // }
-    
+app.post("/campgrounds", validateCampground , catchAsync(async (req, res , next) => { 
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
