@@ -52,7 +52,6 @@ router.get(
   })
 );
 
-
 router.get(
   "/campgrounds/:id/edit",
   catchAsync(async (req, res) => {
