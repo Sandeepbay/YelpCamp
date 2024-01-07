@@ -24,14 +24,13 @@ router.get(
   })
 );
 
-router.get("/campgrounds/new", (req, res) => {
+router.get("/campgrounds/new", isLoggedIn , (req, res) => {
   res.render("campground/new");
 });
 
 router.post(
   "/campgrounds",
   validateCampground,
-  isLoggedIn,
   catchAsync(async (req, res, next) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
