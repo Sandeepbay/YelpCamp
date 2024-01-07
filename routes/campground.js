@@ -4,6 +4,7 @@ const catchAsync = require("../utility/catchAsync")
 const expressError = require("../utility/expressError")
 const {campgroundSchema} = require("../schemas.js")
 const Campground = require("../models/campground");
+const { isLoggedIn } = require('../middleware.js')
 
 const validateCampground = (req,res,next) => {
     const {error} = campgroundSchema.validate(req.body)
@@ -30,6 +31,7 @@ router.get("/campgrounds/new", (req, res) => {
 router.post(
   "/campgrounds",
   validateCampground,
+  isLoggedIn,
   catchAsync(async (req, res, next) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
