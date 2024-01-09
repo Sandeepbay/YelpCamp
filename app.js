@@ -14,7 +14,6 @@ const User = require('./models/user.js')
 const userRoutes = require('./routes/user.js')
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp");
-
 const db = mongoose.connection;
 db.once("error", console.error.bind(console, "connection error:"));
 db.on("open", () => {
