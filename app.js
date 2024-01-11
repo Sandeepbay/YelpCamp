@@ -85,5 +85,5 @@ app.use((err, req, res, next) => {
 })
 
 app.listen(3000, () => {
-  console.log("Server running on Port 3000");
+  console.log("Server running on Port 3000!");
 });
