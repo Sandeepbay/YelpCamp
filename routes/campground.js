@@ -4,17 +4,8 @@ const catchAsync = require("../utility/catchAsync")
 const expressError = require("../utility/expressError")
 const {campgroundSchema} = require("../schemas.js")
 const Campground = require("../models/campground");
-const { isLoggedIn } = require('../middleware.js')
+const { isLoggedIn , isAuthor , validateCampground} = require('../middleware.js')
 
-const validateCampground = (req,res,next) => {
-    const {error} = campgroundSchema.validate(req.body)
-    if(error) {
-      const msg = error.details.map(el => el.message).join(',')
-      throw new expressError(msg , 400)
-    } else {
-      next()
-    }
-  }
 
 router.get(
   "/campgrounds",
@@ -56,16 +47,14 @@ router.get(
 
 router.get(
   "/campgrounds/:id/edit",
+  isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res) => {
     const { id } = req.params
     const campground = await Campground.findById(id)
     if (!campground) {
       req.flash('error', 'Cannot find that campground!');
       return res.redirect('/campgrounds');
-    }
-    if (!campground.author.equals(req.user._id)) {
-      req.flash('error' , "You do not have the permission to do that")
-      return res.redirect(`/campgrounds/${id}`)
     }
     res.render("campground/edit", { campground });
   })
@@ -74,15 +63,11 @@ router.get(
 router.put(
   "/campgrounds/:id",
   isLoggedIn,
+  isAuthor,
   validateCampground,
   catchAsync(async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findById(id)
-    if (!campground.author.equals(req.user._id)) {
-      req.flash('error' , "You do not have the permission to do that")
-      return res.redirect(`/campgrounds/${id}`)
-    }
-    const camp = await Campground.findByIdAndUpdate(id, {
+    const campground = await Campground.findByIdAndUpdate(id, {
       ...req.body.campground,
     });
     req.flash('success', 'Updated a campground!');
@@ -92,6 +77,7 @@ router.put(
 
 router.delete(
   "/campgrounds/:id",
+  isAuthor,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
