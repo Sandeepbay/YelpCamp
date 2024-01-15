@@ -11,7 +11,6 @@ module.exports.isLoggedIn = (req,res,next) => {
         return res.redirect('/login')
     }
     next()
-    
 }
 
 module.exports.storeReturnTo = (req, res, next) => {
